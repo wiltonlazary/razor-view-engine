@@ -1,0 +1,13 @@
+{
+	"files.exclude": {
+		"**/.git": true,
+		"**/.DS_Store": true,
+		"lib/**/*.js": true,
+        "index.js": true,
+        "index.js.map": true,
+		"lib/**/*.js.map": true
+	},
+	
+	"editor.insertSpaces": true,
+	"editor.tabSize": 4
+}
