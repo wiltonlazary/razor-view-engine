@@ -117,7 +117,8 @@ export class Parser {
                     break;
                     
                 case "statement.if":
-                    let _if = new AST.IfStatement(AST.IfType.If);
+                case "statement.elseif":
+                    let _if = new AST.IfStatement(tokens[0].type.name === "if" ? AST.IfType.If : AST.IfType.ElseIf);
                     
                     tokens.shift(); // The IF statement
                     

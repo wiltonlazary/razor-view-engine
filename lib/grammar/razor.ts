@@ -67,9 +67,24 @@ export default (lexer: Lexer) => {
     });
     
     /**
+     * Start an elseif statement
+     */
+    lexer.register(/else if[ ]+/, "if_start", (matches) => {
+        lexer.source = lexer.source.substr(matches[0].length);
+        lexer.state = "if_start";
+        
+        let token: Token = {
+            type: new TokenType("statement.elseif"),
+            value: null
+        };
+        
+        lexer.tokens.push(token);
+    });
+    
+    /**
      * Start an else statement
      */
-    lexer.register(/else[ ]*\{/, "if_start", (matches) => {
+    lexer.register(/else[ ]+\{/, "if_start", (matches) => {
         lexer.source = lexer.source.substr(matches[0].length);
         lexer.state = "if_body";
         
