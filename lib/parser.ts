@@ -54,6 +54,10 @@ export namespace AST {
         public active: boolean = true;
     }
     
+    export class Statement extends AST.Object {
+        public expr: AST.Expression;
+    }
+    
     export class Raw extends AST.Object {
         public content: string;
         
@@ -114,6 +118,26 @@ export class Parser {
                     }
                 
                     this.current.body.push(new AST.Raw(tokens.shift().value));
+                    break;
+                
+                case "statement.start":
+                    let st = new AST.Statement();
+                    
+                    tokens.shift(); // The statement start
+                    
+                    if (!tokens[0].type.is("expr.body")) {
+                        throw new Error("Expecting an expression in the code-statement on line: " + this.lineNumber);
+                    }
+                    
+                    st.expr = new AST.Expression(tokens.shift().value);
+                    
+                    if (!tokens[0].type.is("statement.end")) {
+                        throw new Error("Expecting a statement-end on line: " + this.lineNumber);
+                    }
+                    
+                    tokens.shift(); // Statement end
+                    
+                    this.current.body.push(st);
                     break;
                     
                 case "statement.if":

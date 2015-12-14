@@ -27,6 +27,8 @@ class Engine {
             this.exec(obj as AST.Function);
         } else if (obj instanceof AST.IfContainer) {
             this.outputIf(obj as AST.IfContainer);
+        } else if (obj instanceof AST.Statement) {
+            this.expr((obj as AST.Statement).expr);
         } else if (obj instanceof AST.Raw) {
             this._output += obj.content;
         }
