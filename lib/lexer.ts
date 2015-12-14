@@ -49,7 +49,7 @@ export class Lexer {
         this.tokens = new Array<Token>();
 
         // Import all grammar
-        require("./grammar/html").default(this);
+        require("./grammar/razor").default(this);
     }
 
     public get state() {

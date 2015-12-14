@@ -25,26 +25,37 @@ class Engine {
             this.outputAll(obj.body);
         } else if (obj instanceof AST.Function) {
             this.exec(obj as AST.Function);
-        } else if (obj instanceof AST.IfStatement) {
-            this.outputIf(obj as AST.IfStatement);
+        } else if (obj instanceof AST.IfContainer) {
+            this.outputIf(obj as AST.IfContainer);
         } else if (obj instanceof AST.Raw) {
             this._output += obj.content;
         }
     }
     
-    public outputIf(_if: AST.IfStatement) {
-        let isTrue = this.expr(_if.expr);
-        
-        if (typeof(isTrue) !== "boolean") {
-            throw new Error("Expecting a boolean as if-expression on line: unknown");
-        }
-        
-        switch (_if.type) {
-            case AST.IfType.If:
-                if (isTrue) {
+    public outputIf(container: AST.IfContainer) {
+        for (let i = 0; container.active && i < container.body.length; i++) {
+            let _if = container.body[i] as AST.IfStatement;
+
+            switch (_if.type) {
+                case AST.IfType.If:
+                case AST.IfType.ElseIf:
+                    let isTrue = this.expr(_if.expr);
+                    
+                    if (typeof(isTrue) !== "boolean") {
+                        throw new Error("Expecting a boolean as if/elseif-expression on line: unknown");
+                    }
+                    
+                    if (isTrue) {
+                        this.outputAll(_if.body);
+                        container.active = false;
+                    }
+                    break;
+                    
+                case AST.IfType.Else:
                     this.outputAll(_if.body);
-                }
-                break;
+                    container.active = false;
+                    break;
+            }
         }
     }
     

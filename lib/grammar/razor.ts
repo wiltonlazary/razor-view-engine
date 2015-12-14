@@ -67,19 +67,41 @@ export default (lexer: Lexer) => {
     });
     
     /**
-     * End an if statement
+     * Start an else statement
      */
-    lexer.register(/\}/, "if_start", (matches) => {
+    lexer.register(/else[ ]*\{/, "if_start", (matches) => {
         lexer.source = lexer.source.substr(matches[0].length);
-        lexer.rewindState();
+        lexer.state = "if_body";
         
-        let token: Token = {
-            type: new TokenType("bracket.close"),
+        let token_else: Token = {
+            type: new TokenType("statement.else"),
             value: null
         };
         
-        lexer.tokens.push(token);
+        lexer.tokens.push(token_else);
+        
+        let token_bracket: Token = {
+            type: new TokenType("bracket.open"),
+            value: null
+        };
+        
+        lexer.tokens.push(token_bracket);
     });
+    
+    /**
+     * End an if statement
+     */
+    // lexer.register(/\}/, "if_start", (matches) => {
+    //     lexer.source = lexer.source.substr(matches[0].length);
+    //     lexer.rewindState();
+        
+    //     let token: Token = {
+    //         type: new TokenType("bracket.close"),
+    //         value: null
+    //     };
+        
+    //     lexer.tokens.push(token);
+    // });
     
     /**
      * Write text
